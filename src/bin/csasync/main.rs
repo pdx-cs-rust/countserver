@@ -12,7 +12,8 @@ async fn reply(mut socket: TcpStream, counter: Arc<Mutex<u64>>) {
 }
 
 
-async fn listen(counter: Arc<Mutex<u64>>) {
+async fn listen() {
+    let counter = Arc::new(Mutex::new(0u64));
     let listener = TcpListener::bind("127.0.0.1:10123").await.unwrap();
     let mut incoming = listener.incoming();
     while let Some(socket) = incoming.next().await {
@@ -24,6 +25,5 @@ async fn listen(counter: Arc<Mutex<u64>>) {
 }
 
 fn main() {
-    let counter = Arc::new(Mutex::new(0u64));
-    task::block_on(listen(counter.clone()));
+    task::block_on(listen());
 }
