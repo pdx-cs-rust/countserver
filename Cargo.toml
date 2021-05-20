@@ -5,5 +5,5 @@ authors = ["Bart Massey <bart.massey@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-async-std = "1.5.0"
-futures = "0.3.4"
+async-std = "1.9.0"
+futures = "0.3.15"
