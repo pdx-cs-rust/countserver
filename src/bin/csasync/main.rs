@@ -18,8 +18,8 @@ async fn listen() {
     let mut incoming = listener.incoming();
     while let Some(socket) = incoming.next().await {
         let socket = socket.unwrap();
-        let addr = socket.peer_addr().unwrap();
-        eprintln!("new client: {:?}", addr);
+        //let addr = socket.peer_addr().unwrap();
+        //eprintln!("new client: {:?}", addr);
         let counter = Arc::clone(&counter);
         task::spawn(reply(socket, counter));
     }
