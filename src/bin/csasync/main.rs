@@ -1,10 +1,9 @@
 use async_std::net::*;
 use async_std::prelude::*;
 use async_std::task;
-use std::sync::{
-    Arc,
-    atomic::{AtomicU64, Ordering},
-};
+use async_std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
+
 
 async fn reply(mut socket: TcpStream, counter: Arc<AtomicU64>) {
     let count = counter.fetch_add(1, Ordering::SeqCst);
