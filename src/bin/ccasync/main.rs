@@ -1,3 +1,4 @@
+use async_std::io;
 use async_std::net::*;
 use async_std::prelude::*;
 use async_std::task;
@@ -15,8 +16,9 @@ async fn send(n: usize) {
     for _ in 0..n {
         handles.push(task::spawn(get_count()));
     }
+    let mut stdout = io::stdout();
     for h in handles {
-        println!("{}", h.await);
+        writeln!(stdout, "{}", h.await).await.unwrap();
     }
 }
 
