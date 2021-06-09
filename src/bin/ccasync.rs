@@ -1,7 +1,12 @@
-use async_std::io;
-use async_std::net::*;
-use async_std::prelude::*;
-use async_std::task;
+#[cfg(feature = "async-std")]
+mod async_rt {
+    pub use async_std::io;
+    pub use async_std::net::*;
+    pub use async_std::prelude::*;
+    pub use async_std::task;
+}
+
+use async_rt::*;
 
 async fn get_count() -> u64 {
     let mut stream = TcpStream::connect("127.0.0.1:10123").await.unwrap();

@@ -1,9 +1,13 @@
-use async_std::net::*;
-use async_std::prelude::*;
-use async_std::task;
-use async_std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
+#[cfg(feature = "async-std")]
+mod async_rt {
+    pub use async_std::net::*;
+    pub use async_std::prelude::*;
+    pub use async_std::task;
+    pub use async_std::sync::Arc;
+    pub use std::sync::atomic::{AtomicU64, Ordering};
+}
 
+use async_rt::*;
 
 async fn reply(mut socket: TcpStream, counter: Arc<AtomicU64>) {
     let count = counter.fetch_add(1, Ordering::SeqCst);
