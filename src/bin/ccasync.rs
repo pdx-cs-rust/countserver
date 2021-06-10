@@ -1,9 +1,16 @@
-#[cfg(feature = "async-std")]
+#[cfg(feature = "async-std-rt")]
 mod async_rt {
-    pub use async_std::io;
-    pub use async_std::net::*;
-    pub use async_std::prelude::*;
+    pub use async_std::io::{self, ReadExt};
+    pub use async_std::net::TcpStream;
     pub use async_std::task;
+}
+
+#[cfg(feature = "tokio-rt")]
+mod async_rt {
+    pub use tokio::io::{self, AsyncReadExt};
+    pub use tokio::net::TcpStream;
+    pub use tokio::task;
+    pub use tokio::runtime::Runtime;
 }
 
 use async_rt::*;
@@ -21,12 +28,19 @@ async fn send(n: usize) {
     for _ in 0..n {
         handles.push(task::spawn(get_count()));
     }
-    let mut stdout = io::stdout();
     for h in handles {
-        writeln!(stdout, "{}", h.await).await.unwrap();
+        println!("{:?}", h.await);
     }
 }
 
+#[cfg(feature = "tokio-rt")]
+fn main() {
+    let n = std::env::args().nth(1).unwrap().parse().unwrap();
+    let rt = Runtime::new().unwrap();
+    rt.block_on(send(n));
+}
+
+#[cfg(feature = "async-std-rt")]
 fn main() {
     let n = std::env::args().nth(1).unwrap().parse().unwrap();
     task::block_on(send(n));
