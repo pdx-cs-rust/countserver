@@ -15,6 +15,8 @@ fn main() {
         let _ = std::thread::spawn(move || {
             let count = counter.fetch_add(1, Ordering::SeqCst);
             write!(socket, "{}\r\n", count).unwrap();
+            socket.flush().unwrap();
+            drop(socket);
         });
     }
 }
