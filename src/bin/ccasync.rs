@@ -33,15 +33,12 @@ async fn send(n: usize) {
     }
 }
 
-#[cfg(feature = "tokio-rt")]
 fn main() {
     let n = std::env::args().nth(1).unwrap().parse().unwrap();
-    let rt = Runtime::new().unwrap();
-    rt.block_on(send(n));
-}
-
-#[cfg(feature = "async-std-rt")]
-fn main() {
-    let n = std::env::args().nth(1).unwrap().parse().unwrap();
+    #[cfg(feature = "tokio-rt")] {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(send(n));
+    }
+    #[cfg(feature = "async-std-rt")]
     task::block_on(send(n));
 }

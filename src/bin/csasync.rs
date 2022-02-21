@@ -56,13 +56,11 @@ async fn listen() {
     }
 }
 
-#[cfg(feature = "tokio-rt")]
 fn main() {
-    let rt = Runtime::new().unwrap();
-    rt.block_on(listen());
-}
-
-#[cfg(feature = "async-std-rt")]
-fn main() {
+    #[cfg(feature = "tokio-rt")] {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(listen());
+    }
+    #[cfg(feature = "async-std-rt")]
     task::block_on(listen());
 }
