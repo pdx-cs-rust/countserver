@@ -5,27 +5,27 @@ authors = ["Bart Massey <bart.massey@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-futures = "0.3.15"
+futures = "0.3.21"
 
 [dependencies.async-stream]
 version = "0.3.2"
 optional = true
 
 [dependencies.futures-core]
-version = "0.3.15"
+version = "0.3.21"
 optional = true
 
 [dependencies.futures-util]
-version = "0.3.15"
+version = "0.3.21"
 optional = true
 
 [dependencies.tokio]
-version = "1.6.1"
+version = "1.17.0"
 features = ["net", "rt", "io-std", "io-util", "rt-multi-thread"]
 optional = true
 
 [dependencies.async-std]
-version = "1.9.0"
+version = "1.10.0"
 optional = true
 
 [features]
