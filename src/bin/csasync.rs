@@ -36,6 +36,8 @@ use async_rt::*;
 async fn reply(mut socket: TcpStream, counter: Arc<AtomicU64>) {
     let count = counter.fetch_add(1, Ordering::SeqCst);
     socket.write_all(format!("{}\r\n", count).as_bytes()).await.unwrap();
+    socket.flush().await.unwrap();
+    drop(socket);
 }
 
 
