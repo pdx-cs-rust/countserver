@@ -19,3 +19,11 @@ Supplied programs:
 
 * `ccasync`: Concurrent count client that spawns many connections
   before collecting all counts.
+
+Note that on my modern Linux box I need to run these things
+as root to get decent performance, and I need to
+
+    sysctl net.ipv4.tcp_syncookies=1
+
+to get SYN cookies turned off on localhost. (Sigh. Working
+on reporting this.) Don't forget to turn it off when you're done!
