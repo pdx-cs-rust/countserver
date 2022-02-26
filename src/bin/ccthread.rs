@@ -26,12 +26,17 @@ fn send(n: usize, m: usize) {
 }
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let n = args[1].parse().unwrap();
-    let m = if args.len() > 2 {
-        args[2].parse().unwrap()
-    } else {
-        100
-    };
+    let mut args = std::env::args().skip(1);
+    let n = args
+        .next()
+        .expect("Usage: ccasync count [concurrency_limit]")
+        .parse()
+        .expect("Couldn't parse count as integer");
+    let m = args
+        .next()
+        .as_deref()
+        .unwrap_or("100")
+        .parse()
+        .expect("Couldn't parse concurrency limit as integer");
     send(n, m);
 }
