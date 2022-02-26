@@ -29,7 +29,7 @@ fn main() {
     let mut args = std::env::args().skip(1);
     let n = args
         .next()
-        .expect("Usage: ccasync count [concurrency_limit]")
+        .expect("Usage: ccthread count [concurrency_limit]")
         .parse()
         .expect("Couldn't parse count as integer");
     let m = args
