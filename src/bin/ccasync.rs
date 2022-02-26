@@ -23,8 +23,8 @@ async fn get_count() -> u64 {
     buf.trim_end().parse().unwrap()
 }
 
-async fn send(n: usize) {
-    let mut handles = Vec::with_capacity(100);
+async fn send(n: usize, m: usize) {
+    let mut handles = Vec::with_capacity(m);
     for _ in 0..n {
         let h = task::spawn(async {
             let c = get_count().await;
@@ -34,7 +34,7 @@ async fn send(n: usize) {
                 .unwrap();
         });
         handles.push(h);
-        if handles.len() >= 100 {
+        if handles.len() >= m {
             for h in handles.drain(..) {
                 let _status = h.await;
                 #[cfg(feature = "tokio-rt")]
@@ -50,11 +50,17 @@ async fn send(n: usize) {
 }
 
 fn main() {
-    let n = std::env::args().nth(1).unwrap().parse().unwrap();
+    let args: Vec<String> = std::env::args().collect();
+    let n = args[1].parse().unwrap();
+    let m = if args.len() > 2 {
+        args[2].parse().unwrap()
+    } else {
+        100
+    };
     #[cfg(feature = "tokio-rt")] {
         let rt = Runtime::new().unwrap();
-        rt.block_on(send(n));
+        rt.block_on(send(n, m));
     }
     #[cfg(feature = "async-std-rt")]
-    task::block_on(send(n));
+    task::block_on(send(n, m));
 }

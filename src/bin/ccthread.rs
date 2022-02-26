@@ -10,11 +10,11 @@ fn get_count() -> u64 {
 }
 
 
-fn send(n: usize) {
-    let mut handles = Vec::with_capacity(100);
+fn send(n: usize, m: usize) {
+    let mut handles = Vec::with_capacity(m);
     for _ in 0..n {
         handles.push(thread::spawn(get_count));
-        if handles.len() >= 100 {
+        if handles.len() >= m {
             for h in handles.drain(..) {
                 println!("{:?}", h.join().unwrap());
             }
@@ -26,6 +26,12 @@ fn send(n: usize) {
 }
 
 fn main() {
-    let n = std::env::args().nth(1).unwrap().parse().unwrap();
-    send(n);
+    let args: Vec<String> = std::env::args().collect();
+    let n = args[1].parse().unwrap();
+    let m = if args.len() > 2 {
+        args[2].parse().unwrap()
+    } else {
+        100
+    };
+    send(n, m);
 }
