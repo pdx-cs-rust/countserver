@@ -1,4 +1,5 @@
 #![feature(thread_is_running)]
+#![feature(bind_with_backlog)]
 
 extern crate args;
 
@@ -9,7 +10,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 fn main() {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let args = args::get_args();
-    let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
+    let listener = TcpListener::bind_with_backlog("127.0.0.1:10123", 10_000).unwrap();
     let mut children = Vec::new();
     loop {
         let (mut socket, _addr) = listener.accept().unwrap();
