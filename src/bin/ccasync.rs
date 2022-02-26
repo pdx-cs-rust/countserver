@@ -24,14 +24,26 @@ async fn get_count() -> u64 {
 }
 
 async fn send(n: usize) {
+    let mut handles = Vec::with_capacity(100);
     for _ in 0..n {
-        let _status = task::spawn(async {
+        let h = task::spawn(async {
             let c = get_count().await;
             io::stdout()
                 .write_all(format!("{}\n", c).as_bytes())
                 .await
                 .unwrap();
-        }).await;
+        });
+        handles.push(h);
+        if handles.len() >= 100 {
+            for h in handles.drain(..) {
+                let _status = h.await;
+                #[cfg(feature = "tokio-rt")]
+                _status.unwrap();
+            }
+        }
+    }
+    for h in handles {
+        let _status = h.await;
         #[cfg(feature = "tokio-rt")]
         _status.unwrap();
     }

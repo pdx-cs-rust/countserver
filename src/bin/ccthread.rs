@@ -11,9 +11,14 @@ fn get_count() -> u64 {
 
 
 fn send(n: usize) {
-    let mut handles = Vec::with_capacity(n);
+    let mut handles = Vec::with_capacity(100);
     for _ in 0..n {
         handles.push(thread::spawn(get_count));
+        if handles.len() >= 100 {
+            for h in handles.drain(..) {
+                println!("{:?}", h.join().unwrap());
+            }
+        }
     }
     for h in handles {
         println!("{:?}", h.join().unwrap());
