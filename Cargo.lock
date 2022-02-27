@@ -3,6 +3,11 @@
 version = 3
 
 [[package]]
+name = "argwerk"
+version = "0.20.0"
+source = "git+http://github.com/BartMassey-upstream/argwerk?branch=pr-ed#d87aa74214ffb14497ba68d2593523a81e4513ff"
+
+[[package]]
 name = "async-channel"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -197,6 +202,7 @@ dependencies = [
 name = "countserver"
 version = "0.1.0"
 dependencies = [
+ "argwerk",
  "async-std",
  "async-stream",
  "futures",

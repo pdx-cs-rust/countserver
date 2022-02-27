@@ -1,20 +1,19 @@
 #![feature(thread_is_running)]
 
+extern crate args;
+
 use std::io::Write;
 use std::net::*;
-use std::sync::{
-    Arc,
-    atomic::{AtomicU64, Ordering},
-};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 fn main() {
-    let counter = Arc::new(AtomicU64::new(0));
+    static COUNTER: AtomicU64 = AtomicU64::new(0);
+    let args = args::get_args();
     let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
     let mut children = Vec::new();
     loop {
         let (mut socket, _addr) = listener.accept().unwrap();
-        //eprintln!("new client: {:?}", addr);
-        let counter = Arc::clone(&counter);
+        let counter = &COUNTER;
         let handle = std::thread::spawn(move || {
             let count = counter.fetch_add(1, Ordering::SeqCst);
             write!(socket, "{}\r\n", count).unwrap();
@@ -25,7 +24,7 @@ fn main() {
         // XXX Clippy false-positive on the `filter_map()`. See
         // https://github.com/rust-lang/rust-clippy/issues/4433
         #[allow(clippy::unnecessary_filter_map)]
-        if children.len() >= 100 {
+        while children.len() >= args.m / 2 {
             children = children
                 .into_iter()
                 .filter_map(|h| {

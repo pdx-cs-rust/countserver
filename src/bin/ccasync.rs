@@ -1,3 +1,5 @@
+extern crate args;
+
 #[cfg(feature = "async-std-rt")]
 mod async_rt {
     pub use async_std::io::{self, ReadExt, WriteExt};
@@ -50,22 +52,11 @@ async fn send(n: usize, m: usize) {
 }
 
 fn main() {
-    let mut args = std::env::args().skip(1);
-    let n = args
-        .next()
-        .expect("Usage: ccasync count [concurrency_limit]")
-        .parse()
-        .expect("Couldn't parse count as integer");
-    let m = args
-        .next()
-        .as_deref()
-        .unwrap_or("100")
-        .parse()
-        .expect("Couldn't parse concurrency limit as integer");
+    let args = args::get_args();
     #[cfg(feature = "tokio-rt")] {
         let rt = Runtime::new().unwrap();
-        rt.block_on(send(n, m));
+        rt.block_on(send(args.n, args.m));
     }
     #[cfg(feature = "async-std-rt")]
-    task::block_on(send(n, m));
+    task::block_on(send(args.n, args.m));
 }
