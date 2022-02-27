@@ -7,10 +7,12 @@ argwerk::define! {
         pub m: usize = 100,
     }
     /// Number of transactions.
-    ["-n"] => {
+    ["-n", transactions] => {
+        n = str::parse(&transactions)?;
     }
     /// Maximum concurrent transactions.
-    ["-m"] => {
+    ["-m", transactions] => {
+        m = str::parse(&transactions)?;
     }
 }
 
