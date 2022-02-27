@@ -22,6 +22,9 @@ fn main() {
             drop(socket);
         });
         children.push(handle);
+        // XXX Clippy false-positive on the `filter_map()`. See
+        // https://github.com/rust-lang/rust-clippy/issues/4433
+        #[allow(clippy::unnecessary_filter_map)]
         if children.len() >= 100 {
             children = children
                 .into_iter()
