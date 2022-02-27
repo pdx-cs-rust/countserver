@@ -14,6 +14,9 @@ Supplied programs:
 * `csthread`: Concurrent count server using threads that
   access an `Arc`-protected atomic counter.
 
+* `csthreadscoped`: Concurrent count server using one thread per available CPU,
+  accessing an atomic counter (without using `Arc`).
+
 * `csasync`: Concurrent count server using async accesses to
   an `Arc`-protected atomic counter.
 
