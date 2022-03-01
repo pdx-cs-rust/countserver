@@ -24,7 +24,7 @@ fn main() {
         // XXX Clippy false-positive on the `filter_map()`. See
         // https://github.com/rust-lang/rust-clippy/issues/4433
         #[allow(clippy::unnecessary_filter_map)]
-        while children.len() >= args.m / 2 {
+        while children.len() >= args.m {
             children = children
                 .into_iter()
                 .filter_map(|h| {
