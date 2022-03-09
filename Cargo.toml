@@ -8,9 +8,7 @@ edition = "2021"
 futures = "0.3.21"
 
 [dependencies.argwerk]
-version = "0.20.0"
-git = "http://github.com/BartMassey-upstream/argwerk"
-branch = "pr-ed"
+version = "0.20.1"
 
 [dependencies.async-stream]
 version = "0.3.2"
@@ -36,7 +34,3 @@ optional = true
 [features]
 async-std-rt = ["async-std"]
 tokio-rt = ["tokio", "async-stream", "futures-core", "futures-util"]
-
-[lib]
-name = "args"
-path = "src/lib.rs"
