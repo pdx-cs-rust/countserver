@@ -17,8 +17,9 @@ argwerk::define! {
     pub struct Args {
         pub end: Option<End>,
         pub par: Option<Par>,
-        pub n: usize = 100_000,
-        pub m: usize = 100,
+        pub alt: bool,
+        pub n: Option<usize>,
+        pub m: Option<usize>,
     }
     /// Server mode.
     ["-s" | "--server"] => {
@@ -40,28 +41,35 @@ argwerk::define! {
     ["-a" | "--async"] => {
         par = Some(Par::Async);
     }
+    /// Alternate implementation.
+    ["--alt"] => {
+        alt = true;
+    }
     /// Number of transactions.
     ["-n", transactions] => {
-        n = str::parse(&transactions)?;
+        n = Some(str::parse(&transactions)?);
     }
     /// Maximum concurrent transactions.
     ["-m", transactions] => {
-        m = str::parse(&transactions)?;
+        m = Some(str::parse(&transactions)?);
     }
 }
 
+pub fn fail<T: std::fmt::Display>(msg: T) -> ! {
+    eprintln!("{}", msg);
+    std::process::exit(1);
+}
+
 pub fn get_args() -> Args {
-    let args = Args::args().unwrap_or_else(|e| {
-        eprintln!("{}", e);
-        std::process::exit(1);
-    });
+    // XXX Closure is not redundant, as typechecking won't
+    // allow cleaning it up.
+    #[allow(clippy::redundant_closure)]
+    let args = Args::args().unwrap_or_else(|e| fail(e));
     if args.end.is_none() {
-        eprintln!("must specify client or server");
-        std::process::exit(1);
+        fail("must specify client or server");
     }
     if args.par.is_none() {
-        eprintln!("must specify seq or thread par or async");
-        std::process::exit(1);
+        fail("must specify seq or thread par or async");
     }
     args
 }

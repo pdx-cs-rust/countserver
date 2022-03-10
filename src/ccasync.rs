@@ -1,5 +1,3 @@
-extern crate args;
-
 #[cfg(feature = "async-std-rt")]
 mod async_rt {
     pub use async_std::io::{self, ReadExt, WriteExt};
@@ -51,12 +49,11 @@ async fn send(n: usize, m: usize) {
     }
 }
 
-fn main() {
-    let args = args::get_args();
+pub fn start(n: usize, m: usize) {
     #[cfg(feature = "tokio-rt")] {
         let rt = Runtime::new().unwrap();
-        rt.block_on(send(args.n, args.m));
+        rt.block_on(send(n, m));
     }
     #[cfg(feature = "async-std-rt")]
-    task::block_on(send(args.n, args.m));
+    task::block_on(send(n, m));
 }

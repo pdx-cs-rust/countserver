@@ -1,14 +1,9 @@
-#![feature(thread_is_running)]
-
-extern crate args;
-
 use std::io::Write;
 use std::net::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-fn main() {
+pub fn send(m: usize) {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
-    let args = args::get_args();
     let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
     let mut children = Vec::new();
     loop {
@@ -24,7 +19,7 @@ fn main() {
         // XXX Clippy false-positive on the `filter_map()`. See
         // https://github.com/rust-lang/rust-clippy/issues/4433
         #[allow(clippy::unnecessary_filter_map)]
-        while children.len() >= args.m {
+        while children.len() >= m {
             children = children
                 .into_iter()
                 .filter_map(|h| {

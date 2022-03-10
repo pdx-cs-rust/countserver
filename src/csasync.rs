@@ -56,7 +56,7 @@ async fn listen() {
     }
 }
 
-fn main() {
+pub fn start() {
     #[cfg(feature = "tokio-rt")] {
         let rt = Runtime::new().unwrap();
         rt.block_on(listen());

@@ -1,5 +1,3 @@
-extern crate args;
-
 use std::io::Read;
 use std::net;
 use std::thread;
@@ -12,7 +10,7 @@ fn get_count() -> u64 {
 }
 
 
-fn send(n: usize, m: usize) {
+pub fn send(n: usize, m: usize) {
     let mut handles = Vec::with_capacity(m);
     for _ in 0..n {
         handles.push(thread::spawn(get_count));
@@ -25,9 +23,4 @@ fn send(n: usize, m: usize) {
     for h in handles {
         println!("{:?}", h.join().unwrap());
     }
-}
-
-fn main() {
-    let args = args::get_args();
-    send(args.n, args.m);
 }
