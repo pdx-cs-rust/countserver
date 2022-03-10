@@ -23,7 +23,7 @@ pub fn send(m: usize) {
             children = children
                 .into_iter()
                 .filter_map(|h| {
-                    if h.is_running() {
+                    if !h.is_finished() {
                         Some(h)
                     } else {
                         let () = h.join().unwrap();

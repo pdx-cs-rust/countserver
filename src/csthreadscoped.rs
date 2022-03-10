@@ -7,7 +7,7 @@ pub fn send(m: usize) {
     let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
     std::thread::scope(|s| {
         for _ in 0..m {
-            s.spawn(|_| {
+            s.spawn(|| {
                 for socket in listener.incoming() {
                     let mut socket = socket.unwrap();
                     let count = counter.fetch_add(1, Ordering::SeqCst);
