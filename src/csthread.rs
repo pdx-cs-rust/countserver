@@ -2,7 +2,7 @@ use std::io::Write;
 use std::net::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-pub fn send(m: usize) {
+pub fn start(m: usize) {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
     let mut children = Vec::new();

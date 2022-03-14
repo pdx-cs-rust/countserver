@@ -2,7 +2,7 @@ use std::io::Write;
 use std::net::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-pub fn send(m: usize) {
+pub fn start(m: usize) {
     let counter = AtomicU64::new(0);
     let listener = TcpListener::bind("127.0.0.1:10123").unwrap();
     std::thread::scope(|s| {
