@@ -55,9 +55,10 @@ fn main() {
                         args::fail("no -m for seq server");
                     }
                     if args.alt {
-                        args::fail("no alt seq server");
+                        csseq::simple::start();
+                    } else {
+                        csseq::fast::start();
                     }
-                    csseq::start();
                 }
                 args::Par::Thread => {
                     let m = args.m.unwrap_or_else(p);
