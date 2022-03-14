@@ -14,12 +14,19 @@ pub enum Par {
 }
 
 argwerk::define! {
+    #[usage = "countserver <args ...>"]
     pub struct Args {
+        pub help: bool,
         pub end: Option<End>,
         pub par: Option<Par>,
         pub alt: bool,
         pub n: Option<usize>,
         pub m: Option<usize>,
+    }
+    /// Help with arguments.
+    ["-h" | "--help"] => {
+        println!("{}", Args::help());
+        help = true;
     }
     /// Server mode.
     ["-s" | "--server"] => {
