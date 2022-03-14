@@ -1,12 +1,16 @@
 #![feature(thread_is_running)]
 #![feature(scoped_threads)]
+// XXX This is needed to allow accessing the macros from
+// the submodules in the async modules.
+// See https://github.com/rust-lang/rust-clippy/issues/7290
+#![allow(clippy::single_component_path_imports)]
 
 mod args;
-mod ccthread;
 mod ccasync;
+mod ccthread;
+mod csasync;
 mod csthread;
 mod csthreadscoped;
-mod csasync;
 
 fn main() {
     let args = args::get_args();
@@ -30,9 +34,10 @@ fn main() {
                 }
                 args::Par::Async => {
                     if args.alt {
-                        args::fail("no alt async client");
+                        ccasync::rt_async_std::start(n, m);
+                    } else {
+                        ccasync::rt_tokio::start(n, m);
                     }
-                    ccasync::start(n, m);
                 }
             }
         }
@@ -60,9 +65,10 @@ fn main() {
                         args::fail("no -m for async server");
                     }
                     if args.alt {
-                        args::fail("no alt async server");
+                        csasync::rt_async_std::start();
+                    } else {
+                        csasync::rt_tokio::start();
                     }
-                    csasync::start();
                 }
             }
         }

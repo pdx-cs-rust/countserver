@@ -9,7 +9,6 @@ fn get_count() -> u64 {
     buf.trim_end().parse().unwrap()
 }
 
-
 pub fn send(n: usize, m: usize) {
     let mut handles = Vec::with_capacity(m);
     for _ in 0..n {
