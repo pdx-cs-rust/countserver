@@ -22,7 +22,6 @@ pub mod rt_async_std {
 }
 
 pub mod rt_tokio {
-    pub use std::sync::Arc;
     pub use tokio::io::{self, AsyncWriteExt};
     pub use tokio::net::{TcpListener, TcpStream};
     pub use tokio::runtime::Runtime;
