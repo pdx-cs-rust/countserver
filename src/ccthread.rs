@@ -1,13 +1,20 @@
 use std::collections::VecDeque;
-use std::io::Read;
+use std::io::{Read, Write, stdout};
 use std::net;
 use std::thread;
 
-fn get_count() -> u64 {
+fn get_count() -> Vec<u8> {
     let mut stream = net::TcpStream::connect("127.0.0.1:10123").unwrap();
-    let mut buf = String::with_capacity(22);
-    stream.read_to_string(&mut buf).unwrap();
-    buf.trim_end().parse().unwrap()
+    let mut buf = vec![0u8; 22];
+    stream.read_to_end(&mut buf).unwrap();
+    buf
+}
+
+fn print_count(h: thread::JoinHandle<Vec<u8>>) {
+    let mut buf = h.join().unwrap();
+    let nbuf = buf.len();
+    buf[nbuf - 2] = b'\n';
+    stdout().write_all(&buf[..nbuf-1]).unwrap();
 }
 
 pub fn send(n: usize, m: usize) {
@@ -16,11 +23,11 @@ pub fn send(n: usize, m: usize) {
         handles.push_front(thread::spawn(get_count));
         if handles.len() > m {
             for h in handles.drain(m..) {
-                println!("{:?}", h.join().unwrap());
+                print_count(h);
             }
         }
     }
     for h in handles.into_iter() {
-        println!("{:?}", h.join().unwrap());
+        print_count(h);
     }
 }

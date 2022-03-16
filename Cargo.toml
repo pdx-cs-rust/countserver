@@ -26,3 +26,4 @@ features = ["net", "rt", "io-std", "io-util", "rt-multi-thread"]
 
 [dependencies.async-std]
 version = "1.10.0"
+features = ["unstable"]

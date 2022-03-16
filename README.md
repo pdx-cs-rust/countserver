@@ -52,6 +52,8 @@ Threaded server will use an amortized counter by default. To
 use an atomic counter, use the `--alt` argument.  They are
 roughly the same speed.
 
+## Notes
+
 On my modern Linux box I need to run these things as root to
 get decent performance. I also occasionally need to
 
@@ -59,8 +61,6 @@ get decent performance. I also occasionally need to
 
 to get SYN cookies turned off on localhost. (Sigh. Working
 on reporting this.) Don't forget to undo this when you're done!
-
-## Notes
 
 Various optimizations that have been tried:
 
@@ -72,6 +72,14 @@ Various optimizations that have been tried:
 
 * Make the async server use amortized counter: roughly 3×
   slowdown, ditched.
+
+* Replace the read-parse-print stupidity in the clients with
+  simply writing the received bytes. Some speedup, kept.
+
+* Use `tokio::io::stdout` in the async client. Sadly, since
+  this is not locked it's not guaranteed to work reliably
+  100% of the time. Replaced with `spawn_blocking` writes to
+  `std::io::stdout` for about a 20% slowdown, but correctness.
 
 ## Acknowledgements
 
