@@ -6,13 +6,15 @@
 #![allow(clippy::single_component_path_imports)]
 
 mod args;
+mod counter;
+
 mod ccasync;
 mod ccseq;
 mod ccthread;
+
 mod csasync;
 mod csseq;
 mod csthread;
-mod csthreadscoped;
 
 fn main() {
     let args = args::get_args();
@@ -63,9 +65,9 @@ fn main() {
                 args::Par::Thread => {
                     let m = args.m.unwrap_or_else(p);
                     if args.alt {
-                        csthreadscoped::start(m);
+                        csthread::simple::start(m);
                     } else {
-                        csthread::start(m);
+                        csthread::fast::start(m);
                     }
                 }
                 args::Par::Async => {

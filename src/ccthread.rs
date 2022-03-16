@@ -20,7 +20,7 @@ pub fn send(n: usize, m: usize) {
             }
         }
     }
-    for h in handles.drain(..) {
+    for h in handles.into_iter() {
         println!("{:?}", h.join().unwrap());
     }
 }
