@@ -18,7 +18,7 @@ mod csthread;
 
 fn main() {
     let args = args::get_args();
-    let p = || usize::from(std::thread::available_parallelism().unwrap());
+    let p = || usize::from(std::thread::available_parallelism().unwrap()) / 2 + 1;
     let n = args.n.unwrap_or(100_000);
     match args.end.unwrap() {
         args::End::Client => match args.par.unwrap() {

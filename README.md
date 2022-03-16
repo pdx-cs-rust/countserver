@@ -19,7 +19,7 @@ Supplied modes:
     * `--seq`: Sequential count server.
 
     * `--thread`: Concurrent count server using many threads that
-      access an atomic counter.
+      access a counter.
 
     * `--async`: Concurrent count server using async accesses to
       an atomic counter.
@@ -29,7 +29,7 @@ Supplied modes:
     * `--seq`: Sequential count client.
 
     * `--thread`: Concurrent count client using many threads that
-      access an atomic counter.
+      access a counter.
 
     * `--async`: Concurrent count client using async accesses to
       collect counts.
@@ -38,15 +38,19 @@ Supplied modes:
     to complete. The default is 100K.
 
 The `-m` thread specifies a target level of parallelism for
-some clients and servers. The default is the number of
-parallel threads Rust believes is available: typically the
-number of threads on the host machine.
+some clients and servers. The default is about half the
+number of parallel threads Rust believes is available:
+typically this is the number of threads on the host machine.
 
 Async client and server will use Tokio by default. To use
 `async-std`, use the `--alt` argument.
 
-Threaded server will use standard threading by default. To
-use a scoped server, use the `--alt` argument.
+Sequential server will use a faster amortized counter by
+default. To use an atomic counter, use the `--alt` argument.
+
+Threaded server will use an amortized counter by default. To
+use an atomic counter, use the `--alt` argument.  They are
+roughly the same speed.
 
 On my modern Linux box I need to run these things as root to
 get decent performance. I also occasionally need to
@@ -55,6 +59,19 @@ get decent performance. I also occasionally need to
 
 to get SYN cookies turned off on localhost. (Sigh. Working
 on reporting this.) Don't forget to undo this when you're done!
+
+## Notes
+
+Various optimizations that have been tried:
+
+* Make the seq server use an amortized counter construction
+  instead of an atomic to avoid formatting cost: roughly 20%
+  speedup, kept.
+
+* Make the thread server use amortized counter: same speed, ditched.
+
+* Make the async server use amortized counter: roughly 3×
+  slowdown, ditched.
 
 ## Acknowledgements
 
