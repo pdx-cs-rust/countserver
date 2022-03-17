@@ -1,15 +1,17 @@
-use std::io::Write;
-
 pub mod rt_async_std {
 
     use super::*;
 
-    use async_std::io::ReadExt;
+    use async_std::io::{ReadExt, WriteExt};
     use async_std::net::TcpStream;
     use async_std::task;
 
     async fn drop_handle(h: task::JoinHandle<()>) {
         h.await;
+    }
+
+    async fn stdout_write(buf: Vec<u8>) {
+        async_std::io::stdout().write_all(&buf).await.unwrap();
     }
 
     ccasync!();
@@ -23,6 +25,8 @@ pub mod rt_tokio {
 
     use super::*;
 
+    use std::io::Write;
+
     use tokio::io::AsyncReadExt;
     use tokio::net::TcpStream;
     use tokio::runtime::Runtime;
@@ -30,6 +34,12 @@ pub mod rt_tokio {
 
     async fn drop_handle(h: task::JoinHandle<()>) {
         h.await.unwrap();
+    }
+
+    async fn stdout_write(buf: Vec<u8>) {
+        task::spawn_blocking(move || {
+            std::io::stdout().write_all(&buf).unwrap();
+        });
     }
 
     ccasync!();
@@ -57,9 +67,8 @@ macro_rules! ccasync {
                     let mut buf = get_count().await;
                     let nbuf = buf.len();
                     buf[nbuf - 2] = b'\n';
-                    task::spawn_blocking(move || {
-                        std::io::stdout().write_all(&buf[..nbuf-1]).unwrap();
-                    });
+                    let _ = buf.pop();
+                    stdout_write(buf).await;
                 });
                 handles.push(h);
                 if handles.len() >= m {
