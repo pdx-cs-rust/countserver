@@ -1,10 +1,3 @@
-#![feature(thread_is_running)]
-#![feature(scoped_threads)]
-// XXX This is needed to allow accessing the macros from
-// the submodules in the async modules.
-// See https://github.com/rust-lang/rust-clippy/issues/7290
-#![allow(clippy::single_component_path_imports)]
-
 mod args;
 mod counter;
 

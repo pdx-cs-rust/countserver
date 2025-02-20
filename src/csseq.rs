@@ -29,7 +29,7 @@ pub mod fast {
         let mut counter = Counter::default();
         loop {
             let (mut socket, _addr) = listener.accept().unwrap();
-            let _ = socket.write_all(counter.value()).unwrap();
+            socket.write_all(counter.value()).unwrap();
             counter.inc();
             socket.flush().unwrap();
             drop(socket);
